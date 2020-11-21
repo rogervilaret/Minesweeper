@@ -105,12 +105,33 @@ class Sentence():
         """
         Returns the set of all cells in self.cells known to be mines.
         """
+        mines = set()
+        test = self.count
+        if test > 0:
+            for cell in self.cells:
+                mines.add()
+                test = test - 1
+
+        if test == 0:
+            return mines
+        else:
+            return set()
+
+
         raise NotImplementedError
 
     def known_safes(self):
         """
         Returns the set of all cells in self.cells known to be safe.
         """
+        safes = set()
+        if self.count==0:
+            for cell in self.cells:
+                safes.add()
+        
+        return safes
+
+
         raise NotImplementedError
 
     def mark_mine(self, cell):
@@ -118,13 +139,26 @@ class Sentence():
         Updates internal knowledge representation given the fact that
         a cell is known to be a mine.
         """
+        try:
+            self.cells.remove(cell)
+            if self.count > 0:
+                self.count = self.count -1    
+        except KeyError:
+            pass
         raise NotImplementedError
+        
 
     def mark_safe(self, cell):
         """
         Updates internal knowledge representation given the fact that
         a cell is known to be safe.
         """
+        try:
+           
+            self.cells.remove(cell)
+            
+        except KeyError:
+            pass
         raise NotImplementedError
 
 
