@@ -216,6 +216,41 @@ class MinesweeperAI():
             5) add any new sentences to the AI's knowledge base
                if they can be inferred from existing knowledge
         """
+
+        self.moves_made.add(cell)
+        self.safes.add(cell)
+
+
+        #built new sentence , we check neighbours depending on their status adding in the sentences... 
+        a = cell[0]
+        b = cell[1]
+        new_sentence_cells =  set()
+
+        for i in range(a-1,a+1):
+            if (i >= 0 or i <= 7):
+                for j in range(b-1,b+1):
+                    if (j >= 0 or j <= 7):
+                        # cell(i,j) test if used or mine
+                        if (i,j) not in self.moves_made:
+                            if (i,j) not in self.mines:
+                                new_sentence_cells.add((i,j))
+
+        self.knowledge.append(Sentence(new_sentence_cells,count))
+        
+        #after mark as safe in each sentence
+        for sentence in knowledge:
+            sentence.mark_safe((a,b))
+            #self.mines = self.mines.union( sentence.known_mines())
+            self.mines.update(sentence.known_mines())
+            #self.safes = self.safes.union( sentence.known_safes())
+            self.safes.update(sentence.known_safes())
+
+
+        
+
+
+
+
         raise NotImplementedError
 
     def make_safe_move(self):
@@ -227,6 +262,14 @@ class MinesweeperAI():
         This function may use the knowledge in self.mines, self.safes
         and self.moves_made, but should not modify any of those values.
         """
+        for cell in self.safes:
+            if cell not in self.moves_made:
+                return cell
+        
+        return
+
+
+
         raise NotImplementedError
 
     def make_random_move(self):
@@ -236,4 +279,16 @@ class MinesweeperAI():
             1) have not already been chosen, and
             2) are not known to be mines
         """
+        import random
+
+        ini = random.randint(0,7)
+
+        for i in range(0 + ini, 7 + ini):
+            for j in range(0 + ini,7 + ini):
+                a= i % 7
+                b= j % 7
+                if (a,b) not in self.moves_made:
+                    if (a,b) not in self.mines:
+                        return (a,b)
+        return
         raise NotImplementedError
