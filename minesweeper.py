@@ -106,13 +106,10 @@ class Sentence():
         Returns the set of all cells in self.cells known to be mines.
         """
         mines = set()
-        
         if self.count == len(self.cells):
             for cell in self.cells:
                 mines.add(cell)
-               
-
-        
+     
         return mines
         
         raise NotImplementedError
@@ -247,25 +244,26 @@ class MinesweeperAI():
                         # cell(i,j) test if used or mine
                         if (i,j) not in self.moves_made:
                             new_sentence_cells.add((i,j))
+
         #add to knowledge                     
         if len(new_sentence_cells) > 0 and count >= 0:
             new_know = Sentence(new_sentence_cells,count)
             self.knowledge.append(new_know)
         
-        #after mark as safe in each sentence
+        #mark as safe in each sentence and adding new possible known mines and known safes
         for sentence in self.knowledge:
             sentence.mark_safe((a,b))
             self.mines.update(sentence.known_mines())
             self.safes.update(sentence.known_safes())
             self.safes.difference_update(self.moves_made)
         
-        #clean knowing mines:
+        #clean known mines:
         for sentence in self.knowledge:
             for mine in self.mines:
                 sentence.mark_mine(mine)
                 
 
-        #clean knowing safe cells:
+        #clean known safe cells:
         for sentence in self.knowledge:
             for safe in self.safes:
                 sentence.mark_safe(safe)
@@ -281,10 +279,8 @@ class MinesweeperAI():
                     if sentence1 != sentence2:
                         if sentence1.cells.issubset(sentence2.cells):
                             newsentence = Sentence(sentence2.cells - sentence1.cells, sentence2.count - sentence1.count)
-                            if not newsentence in self.knowledge:
+                            if newsentence not in self.knowledge:
                                  self.knowledge.append(newsentence)
-                                
-       
         
         return
         raise NotImplementedError
@@ -298,17 +294,12 @@ class MinesweeperAI():
         This function may use the knowledge in self.mines, self.safes
         and self.moves_made, but should not modify any of those values.
         """
-        
-
-
+ 
         for cell in self.safes:
             if cell not in self.moves_made and cell not in self.mines:
                 return cell
         
-       
         return
-
-
 
         raise NotImplementedError
 
@@ -331,5 +322,7 @@ class MinesweeperAI():
                 if (x1,y1) not in self.moves_made:
                         if (x1,y1) not in self.mines:
                             return (x1,y1)
+
         return
+        
         raise NotImplementedError
